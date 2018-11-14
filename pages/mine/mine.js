@@ -43,6 +43,60 @@ Page({
         }
       }
     })
+  },
+
+  changeFace: function() {
+    wx.chooseImage({
+      count: 1,
+      sizeType: ['compressed'],
+      sourceType: ['album'],
+      success: function(res) {
+        var tempFilePaths = res.tempFilePaths;
+        console.log(tempFilePaths);
+
+        wx.showLoading({
+          title: '上传中...',
+        })
+
+        var serverUrl = app.serverUrl;
+        wx.uploadFile({
+          url: serverUrl + '/user/uploadFace?userId=' + app.userInfo.id, //登陆之后传进来的userInfo
+          filePath: tempFilePaths[0],
+          name: 'file',  //传到后台入参  文件对应的 key，开发者在服务端可以通过这个 key 获取文件的二进制内容
+          header: {
+            'content-type': 'application/json', // 默认值
+          },
+          success: function (res) {
+            var data = JSON.parse(res.data);
+            console.log(data);
+            wx.hideLoading();
+
+            if (data.status == 200) {
+              wx.showToast({
+                title: '上传成功!',
+                icon: "success"
+              });
+            } else if (data.status == 500) {
+              wx.showToast({
+                title: data.msg
+              });
+            } else if (res.data.status == 502) {
+              wx.showToast({
+                title: res.data.msg,
+                duration: 2000,
+                icon: "none",
+                success: function () {
+                  wx.redirectTo({
+                    url: '../userLogin/login',
+                  })
+                }
+              });
+
+            }
+          }   
+        })
+      }
+    })
   }
 
 })

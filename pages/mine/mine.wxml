@@ -2,12 +2,7 @@
 
   <view class='container'>
 
-    <block wx:if="{{isMe}}">
-      <image src="{{faceUrl}}" class="face" bindtap='changeFace'></image>
-    </block>
-    <block wx:if="{{!isMe}}">
-      <image src="{{faceUrl}}" class="face"></image>
-    </block>
+    <image src="{{faceUrl}}" class="face" bindtap='changeFace'></image>
     <label class='nickname'>{{nickname}}</label>
 
     <!--<block wx:if="{{isMe}}">-->
