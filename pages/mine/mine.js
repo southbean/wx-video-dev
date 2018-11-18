@@ -6,7 +6,56 @@ Page({
   },
 
   onLoad: function (params) {
-   
+    var me = this;
+
+    var user = app.userInfo;
+
+    
+    wx.showLoading({
+      title: '请等待...',
+    });
+    var serverUrl = app.serverUrl;
+    wx.request({
+      url: serverUrl + '/user/query?userId=' + user.id,
+      method: "POST",
+      header: {
+        'content-type': 'application/json', // 默认值
+        'headerUserId': user.id,
+        'headerUserToken': user.userToken
+      },
+      success: function (res) {
+        console.log(res.data);
+        wx.hideLoading();
+        if (res.data.status == 200) {
+          var userInfo = res.data.data;
+          var faceUrl = "../resource/images/noneface.png";
+          if (userInfo.faceImage != null && userInfo.faceImage != '' && userInfo.faceImage != undefined) {
+            faceUrl = serverUrl + userInfo.faceImage;
+          }
+
+
+          me.setData({
+            faceUrl: faceUrl,
+            fansCounts: userInfo.fansCounts,
+            followCounts: userInfo.followCounts,
+            receiveLikeCounts: userInfo.receiveLikeCounts,
+            nickname: userInfo.nickname,
+            isFollow: userInfo.follow
+          });
+        } else if (res.data.status == 502) {
+          wx.showToast({
+            title: res.data.msg,
+            duration: 3000,
+            icon: "none",
+            success: function () {
+              wx.redirectTo({
+                url: '../userLogin/login',
+              })
+            }
+          })
+        }
+      }
+    })
   },
 
   logout: function(){
@@ -46,6 +95,8 @@ Page({
   },
 
   changeFace: function() {
+    var me = this;
+
     wx.chooseImage({
       count: 1,
       sizeType: ['compressed'],
@@ -75,6 +126,11 @@ Page({
               wx.showToast({
                 title: '上传成功!',
                 icon: "success"
+              });
+
+              var imageUrl = data.data;
+              me.setData({
+                faceUrl: serverUrl + imageUrl
               });
             } else if (data.status == 500) {
               wx.showToast({
