@@ -3,6 +3,7 @@ const app = getApp()
 Page({
     data: {
       bgmList: [],
+      serverUrl: ''
     },
 
     onLoad: function (params) {
@@ -30,7 +31,8 @@ Page({
             var bgmList = res.data.data;
             console.log(bgmList);
             me.setData({
-              bgmList: bgmList
+              bgmList: bgmList,
+              serverUrl: serverUrl
             });
           } 
         }
