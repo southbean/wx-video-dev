@@ -3,7 +3,8 @@ const app = getApp()
 Page({
     data: {
       bgmList: [],
-      serverUrl: ''
+      serverUrl: '',
+      videoParams:{}
     },
 
     onLoad: function (params) {
@@ -60,12 +61,12 @@ Page({
       })
       var serverUrl = app.serverUrl;
       // fixme 修改原有的全局对象为本地缓存
-      var userInfo = app.getGlobalUserInfo();
+     // var userInfo = app.getGlobalUserInfo();
 
       wx.uploadFile({
         url: serverUrl + '/video/upload',
         formData: {
-          userId: userInfo.id,    // fixme 原来的 app.userInfo.id
+          userId: app.userInfo.id,    // fixme 原来的 app.userInfo.id
           bgmId: bgmId,
           desc: desc,
           videoSeconds: duration,
@@ -75,9 +76,7 @@ Page({
         filePath: tmpVideoUrl,
         name: 'file',
         header: {
-          'content-type': 'application/json', // 默认值
-          'headerUserId': userInfo.id,
-          'headerUserToken': userInfo.userToken
+          'content-type': 'application/json' // 默认值
         },
         success: function (res) {
           var data = JSON.parse(res.data);
