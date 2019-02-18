@@ -20,8 +20,8 @@ Page({
       screenWidth: screenWidth,
     });
     
-    var searchContent = params.search;
-    var isSaveRecord = params.isSaveRecord;
+    var searchContent = params.search;//短视频点击查询的时候用
+    var isSaveRecord = params.isSaveRecord;//短视频点击查询的时候用
     if (isSaveRecord == null || isSaveRecord == '' || isSaveRecord == undefined) {
       isSaveRecord = 0;
     }
